@@ -11,15 +11,6 @@
 #include "ERMInterpreter.h"
 
 #include <cctype>
-#include "../../lib/mapObjects/CObjectHandler.h"
-#include "../../lib/mapObjects/MapObjects.h"
-#include "../../lib/NetPacks.h"
-#include "../../lib/CHeroHandler.h"
-#include "../../lib/CCreatureHandler.h"
-#include "../../lib/VCMIDirs.h"
-#include "../../lib/IGameCallback.h"
-#include "../../lib/mapObjects/CGHeroInstance.h"
-#include "../../lib/mapObjects/MiscObjects.h"
 
 namespace spirit = boost::spirit;
 using ::scripting::ContextBase;
@@ -55,7 +46,7 @@ namespace ERMConverter
 			}
 			else
 			{
-				return val.varsym;
+				return boost::to_string(boost::format("ERM.%s") % val.varsym);
 			}
 		}
 
@@ -1147,6 +1138,22 @@ namespace ERMConverter
 		}
 	};
 
+	void convertInstructions(std::ostream & out, ERMInterpreter * owner)
+	{
+		out << "local function instructions()" << std::endl;
+
+		Line lineConverter(&out);
+
+		for(const LinePointer & lp : owner->instructions)
+		{
+			ERM::TLine & line = owner->retrieveLine(lp);
+
+			boost::apply_visitor(lineConverter, line);
+		}
+
+		out << "end" << std::endl;
+	}
+
 	void convertFunctions(std::ostream & out, ERMInterpreter * owner, const std::vector<VERMInterpreter::Trigger> & triggers)
 	{
 		std::map<std::string, LinePointer> numToBody;
@@ -1155,7 +1162,7 @@ namespace ERMConverter
 
 		for(const VERMInterpreter::Trigger & trigger : triggers)
 		{
-			ERM::TLine firstLine = owner->retrieveLine(trigger.line);
+			ERM::TLine & firstLine = owner->retrieveLine(trigger.line);
 
 			const ERM::TTriggerBase & trig = ERMInterpreter::retrieveTrigger(firstLine);
 
@@ -1227,6 +1234,11 @@ struct ScriptScanner : boost::static_visitor<>
 					interpreter->triggers[ TriggerType(boost::get<ERM::Ttrigger>(tcmd.cmd).name) ].push_back(trig);
 				}
 				break;
+			case 1: //instruction
+				{
+					interpreter->instructions.push_back(lp);
+				}
+				break;
 			case 3: //post trigger
 				{
 					Trigger trig;
@@ -1235,7 +1247,6 @@ struct ScriptScanner : boost::static_visitor<>
 				}
 				break;
 			default:
-
 				break;
 			}
 		}
@@ -1245,10 +1256,8 @@ struct ScriptScanner : boost::static_visitor<>
 
 void ERMInterpreter::scanScripts()
 {
-	for(std::map< LinePointer, ERM::TLine >::const_iterator it = scripts.begin(); it != scripts.end(); ++it)
-	{
-		boost::apply_visitor(ScriptScanner(this, it->first), it->second);
-	}
+	for(auto p : scripts)
+		boost::apply_visitor(ScriptScanner(this, p.first), p.second);
 }
 
 ERMInterpreter::ERMInterpreter(vstd::CLoggerBase * logger_)
@@ -1333,11 +1342,10 @@ bool ERMInterpreter::isCMDATrigger( const ERM::Tcommand & cmd )
 	}
 }
 
-ERM::TLine &ERMInterpreter::retrieveLine( LinePointer linePtr )
+ERM::TLine & ERMInterpreter::retrieveLine(const LinePointer & linePtr)
 {
 	return scripts.find(linePtr)->second;
 }
-
 
 ERM::TTriggerBase & ERMInterpreter::retrieveTrigger( ERM::TLine &line )
 {
@@ -1408,6 +1416,8 @@ std::string ERMInterpreter::convert()
 	out << "local z = ERM.z" << std::endl;
 	out << "local flag = ERM.flag" << std::endl;
 
+	ERMConverter::convertInstructions(out, this);
+
 	for(const auto & p : triggers)
 	{
 		const VERMInterpreter::TriggerType & tt = p.first;
@@ -1425,9 +1435,9 @@ std::string ERMInterpreter::convert()
 	for(const auto & p : postTriggers)
 		;//TODO
 
-	//TODO: instructions
-
 	//TODO: !?PI
+
+	out << "ERM.callInstructions(instructions)" << std::endl;
 
 	return out.str();
 }

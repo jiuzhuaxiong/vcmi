@@ -13,6 +13,8 @@
 
 namespace test
 {
+using namespace ::testing;
+using namespace ::scripting;
 
 ScriptFixture::BattleFake::BattleFake(std::shared_ptr<PoolMock> pool_)
 	: CBattleInfoCallback(),
@@ -31,11 +33,7 @@ Pool * ScriptFixture::BattleFake::getContextPool() const
 	return pool.get();
 }
 
-
-ScriptFixture::ScriptFixture()
-{
-	//ctor
-}
+ScriptFixture::ScriptFixture() =  default;
 
 ScriptFixture::~ScriptFixture() = default;
 
@@ -43,9 +41,25 @@ void ScriptFixture::loadScript(const JsonNode & scriptConfig)
 {
 	subject = VLC->scriptHandler->loadFromJson(scriptConfig, "test");
 
+	GTEST_ASSERT_NE(subject, nullptr);
+
 	context = subject->createContext(&environmentMock);
 
-	EXPECT_CALL(*pool, getContext(_)).WillRepeatedly(Return(context));
+	EXPECT_CALL(*pool, getContext(Eq(subject.get()))).WillRepeatedly(Return(context));
+}
+
+void ScriptFixture::loadScript(ModulePtr module, const std::string & scriptSource)
+{
+	subject = std::make_shared<ScriptImpl>(VLC->scriptHandler);
+
+	subject->host = module;
+	subject->sourceText = scriptSource;
+	subject->identifier = "test";
+	subject->compile();
+
+	context = subject->createContext(&environmentMock);
+
+	EXPECT_CALL(*pool, getContext(Eq(subject.get()))).WillRepeatedly(Return(context));
 }
 
 void ScriptFixture::setUp()
@@ -60,5 +74,9 @@ void ScriptFixture::setUp()
 	EXPECT_CALL(environmentMock, logger()).WillRepeatedly(Return(&loggerMock));
 }
 
+void ScriptFixture::run(const JsonNode & scriptState)
+{
+	context->run(scriptState);
+}
 
 }

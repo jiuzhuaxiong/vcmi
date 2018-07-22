@@ -38,6 +38,18 @@ ScriptImpl::ScriptImpl(const ScriptHandler * owner_)
 
 ScriptImpl::~ScriptImpl() = default;
 
+void ScriptImpl::compile()
+{
+	code = host->compile(sourcePath, sourceText);
+
+	if(host == owner->erm)
+	{
+		host = owner->lua;
+		sourceText = code;
+		code = host->compile(getName(), getSource());
+	}
+}
+
 std::shared_ptr<Context> ScriptImpl::createContext(const Environment * env) const
 {
 	return host->createContextFor(this, env);
@@ -80,14 +92,7 @@ void ScriptImpl::serializeJson(JsonSerializeFormat & handler)
 
 		sourceText = std::string((char *)rawData.first.get(), rawData.second);
 
-		code = host->compile(sourcePath, sourceText);
-
-		if(host == owner->erm)
-		{
-			host = owner->lua;
-			sourceText = code;
-			code = host->compile(getName(), getSource());
-		}
+		compile();
 	}
 }
 
@@ -131,6 +136,12 @@ std::shared_ptr<Context> PoolImpl::getContext(const Script * script)
 	{
 		auto context = script->createContext(this);
 		cache[script] = context;
+
+		auto key = script->getName();
+		const JsonNode & scriptState = state[key];
+
+		context->run(scriptState);
+
 		return context;
 	}
 	else
@@ -139,7 +150,7 @@ std::shared_ptr<Context> PoolImpl::getContext(const Script * script)
 	}
 }
 
- const GameCb * PoolImpl::game() const
+const GameCb * PoolImpl::game() const
 {
 	return gameCb;
 }
@@ -152,6 +163,26 @@ const BattleCb * PoolImpl::battle() const
 ::vstd::CLoggerBase * PoolImpl::logger() const
 {
 	return logMod;
+}
+
+void PoolImpl::serializeState(const bool saving, JsonNode & data)
+{
+	if(saving)
+	{
+        for(auto & scriptAndContext : cache)
+		{
+			auto script = scriptAndContext.first;
+			auto context = scriptAndContext.second;
+
+			state[script->getName()] = context->saveState();
+
+			data = state;
+		}
+	}
+	else
+	{
+		state = data;
+	}
 }
 
 ScriptHandler::ScriptHandler()

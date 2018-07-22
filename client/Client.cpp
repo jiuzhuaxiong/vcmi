@@ -175,10 +175,11 @@ void CClient::loadGame()
 
 	gs->updateOnLoad(CSH->si.get());
 	initMapHandler();
-	serialize(loader->serializer, loader->serializer.fileVersion);
 
 	scriptsBattleCallback.reset(new CBattleCallback(boost::none, this));
 	clientScripts.reset(new scripting::PoolImpl(this, scriptsBattleCallback.get()));
+
+	serialize(loader->serializer, loader->serializer.fileVersion);
 
 	initPlayerInterfaces();
 }
@@ -201,8 +202,8 @@ void CClient::serialize(BinarySerializer & h, const int version)
 
 	if(version >= 790)
 	{
-		//TODO: save scripts state
 		JsonNode scriptsState;
+		clientScripts->serializeState(h.saving, scriptsState);
 		h & scriptsState;
 	}
 }
@@ -271,9 +272,9 @@ void CClient::serialize(BinaryDeserializer & h, const int version)
 
 	if(version >= 790)
 	{
-		//TODO: load scripts state
 		JsonNode scriptsState;
 		h & scriptsState;
+		clientScripts->serializeState(h.saving, scriptsState);
 	}
 
 	logNetwork->trace("Loaded client part of save %d ms", CSH->th->getDiff());

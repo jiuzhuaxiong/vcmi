@@ -62,6 +62,10 @@ public:
 	virtual ~ScriptFixture();
 
 	void loadScript(const JsonNode & scriptConfig);
+	void loadScript(ModulePtr module, const std::string & scriptSource);
+
+	void run(const JsonNode & scriptState = JsonNode());
+
 protected:
 	void setUp();
 

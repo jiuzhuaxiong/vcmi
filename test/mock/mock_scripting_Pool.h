@@ -19,7 +19,7 @@ class PoolMock : public Pool
 {
 public:
 	MOCK_METHOD1(getContext, std::shared_ptr<Context>(const Script *));
-
+	MOCK_METHOD2(serializeState, void(const bool, JsonNode &));
 };
 
 }

@@ -49,6 +49,8 @@ public:
 	ScriptImpl(const ScriptHandler * owner_);
 	virtual ~ScriptImpl();
 
+	void compile();
+
 	void serializeJson(JsonSerializeFormat & handler);
 	void serializeJsonState(JsonSerializeFormat & handler);
 
@@ -73,8 +75,12 @@ public:
 	const BattleCb * battle() const override;
 	const GameCb * game() const override;
 	::vstd::CLoggerBase * logger() const override;
+
+	void serializeState(const bool saving, JsonNode & data) override;
 private:
 	std::map<const Script *, std::shared_ptr<Context>> cache;
+
+	JsonNode state;
 
 	const GameCb * gameCb;
 	const BattleCb * battleCb;

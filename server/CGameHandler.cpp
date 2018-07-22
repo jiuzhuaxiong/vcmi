@@ -1557,6 +1557,8 @@ void CGameHandler::init(StartInfo *si)
 	{
 		states.addPlayer(elem.first);
 	}
+
+	serverScripts.reset(new scripting::PoolImpl(this, this));
 }
 
 static bool evntCmp(const CMapEvent &a, const CMapEvent &b)
@@ -1935,8 +1937,6 @@ void CGameHandler::newTurn()
 void CGameHandler::run(bool resume)
 {
 	LOG_TRACE_PARAMS(logGlobal, "resume=%d", resume);
-
-	serverScripts.reset(new scripting::PoolImpl(this, this));
 
 	using namespace boost::posix_time;
 	for (auto cc : lobby->connections)
@@ -2747,7 +2747,7 @@ void CGameHandler::sendAndApply(NewStructures * pack)
 
 void CGameHandler::save(const std::string & filename)
 {
-	logGlobal->info("Loading from %s", filename);
+	logGlobal->info("Saving to %s", filename);
 	const auto stem	= FileInfo::GetPathStem(filename);
 	const auto savefname = stem.to_string() + ".vsgm1";
 	CResourceHandler::get("local")->createResource(savefname);
@@ -2778,6 +2778,8 @@ void CGameHandler::load(const std::string & filename)
 {
 	logGlobal->info("Loading from %s", filename);
 	const auto stem	= FileInfo::GetPathStem(filename);
+
+	serverScripts.reset(new scripting::PoolImpl(this, this));
 
 	try
 	{
