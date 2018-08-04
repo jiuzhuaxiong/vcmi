@@ -191,6 +191,7 @@ set(lib_HEADERS
 		battle/CUnitState.h
 		battle/Destination.h
 		battle/IBattleEventRealizer.h
+		battle/IBattleInfoCallback.h
 		battle/IBattleState.h
 		battle/IUnitInfo.h
 		battle/ReachabilityInfo.h

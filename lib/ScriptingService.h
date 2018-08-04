@@ -15,12 +15,12 @@ class JsonNode;
 class IGameInfoCallback;
 class IGameEventRealizer;
 class IBattleEventRealizer;
-class CBattleInfoCallback;
+class IBattleInfoCallback;
 
 namespace scripting
 {
 
-using BattleCb = ::CBattleInfoCallback;
+using BattleCb = ::IBattleInfoCallback;
 using GameCb = ::IGameInfoCallback;
 using ServerCb = ::IGameEventRealizer;
 using ServerBattleCb = ::IBattleEventRealizer;

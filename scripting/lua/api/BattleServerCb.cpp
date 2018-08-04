@@ -25,7 +25,7 @@ namespace api
 
 const std::string BattleServerCbProxy::CLASSNAME = "BattleServerCb";
 
-const std::vector<BattleServerCbProxy::Wrapper::RegType> BattleServerCbProxy::REGISTER =
+const std::vector<BattleServerCbProxy::RegType> BattleServerCbProxy::REGISTER =
 {
 	{
 		"moveUnit",
@@ -33,18 +33,18 @@ const std::vector<BattleServerCbProxy::Wrapper::RegType> BattleServerCbProxy::RE
 	}
 };
 
-int BattleServerCbProxy::moveUnit(lua_State * L, Object * object)
+int BattleServerCbProxy::moveUnit(lua_State * L, ServerBattleCb * object)
 {
 	LuaStack S(L);
 
 	std::shared_ptr<BattleStackMoved> pack;
 
 	if(!S.tryGetShared<netpacks::BattleStackMovedProxy>(1, pack))
-		return S.retNil();
+		return S.retVoid();
 
 	object->apply(pack.get());
 
-	return S.retNil();
+	return S.retVoid();
 }
 
 

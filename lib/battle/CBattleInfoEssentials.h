@@ -9,26 +9,17 @@
  */
 #pragma once
 #include "CCallbackBase.h"
-#include "BattleHex.h"
+#include "IBattleInfoCallback.h"
 
 class CGTownInstance;
 class CGHeroInstance;
 class CStack;
-struct CObstacleInstance;
 class IBonusBearer;
 struct InfoAboutHero;
 class CArmedInstance;
 
 typedef std::vector<const CStack *> TStacks;
 typedef std::function<bool(const CStack *)> TStackFilter;
-
-namespace battle
-{
-	class IUnitInfo;
-	class Unit;
-	using Units = std::vector<const Unit *>;
-	using UnitFilter = std::function<bool(const Unit *)>;
-}
 
 namespace BattlePerspective
 {
@@ -41,7 +32,7 @@ namespace BattlePerspective
 	};
 }
 
-class DLL_LINKAGE CBattleInfoEssentials : public virtual CCallbackBase
+class DLL_LINKAGE CBattleInfoEssentials : public virtual CCallbackBase, public IBattleInfoCallback
 {
 protected:
 	bool battleDoWeKnowAbout(ui8 side) const;

@@ -26,7 +26,7 @@ public:
 	LuaContext(vstd::CLoggerBase * logger_, const Script * source);
 	virtual ~LuaContext();
 
-	void init(const IGameInfoCallback * cb, const CBattleInfoCallback * battleCb);
+	void init(const GameCb * cb, const BattleCb * battleCb);
 
 	void run(const JsonNode & initialState) override;
 
@@ -58,6 +58,8 @@ public:
 	void push(lua_CFunction f, void * opaque);
 	void push(ServerCb * cb);
 	void push(ServerBattleCb * cb);
+	void push(const GameCb * cb);
+	void push(const BattleCb * cb);
 
 	std::string toStringRaw(int index);
 
@@ -68,8 +70,8 @@ private:
 
 	const Script * script;
 
-	const IGameInfoCallback * icb;
-	const CBattleInfoCallback * bicb;
+	const GameCb * icb;
+	const BattleCb * bicb;
 
 	void cleanupGlobals();
 

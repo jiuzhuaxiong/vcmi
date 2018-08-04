@@ -19,20 +19,19 @@ namespace api
 namespace netpacks
 {
 
-class BattleStackMovedProxy
+class BattleStackMovedProxy : public SharedWrapper<BattleStackMoved, BattleStackMovedProxy>
 {
 public:
-	using Object = BattleStackMoved;
-	using Wrapper = SharedWrapper<Object, BattleStackMovedProxy>;
+	using Wrapper = SharedWrapper<BattleStackMoved, BattleStackMovedProxy>;
 
 	static const std::vector<Wrapper::RegType> REGISTER;
 	static const std::string CLASSNAME;
 
-	static int addTileToMove(lua_State * L, std::shared_ptr<Object> object);
+	static int addTileToMove(lua_State * L, std::shared_ptr<BattleStackMoved> object);
 
-	static int setUnitId(lua_State * L, std::shared_ptr<Object> object);
-	static int setDistance(lua_State * L, std::shared_ptr<Object> object);
-	static int setTeleporting(lua_State * L, std::shared_ptr<Object> object);
+	static int setUnitId(lua_State * L, std::shared_ptr<BattleStackMoved> object);
+	static int setDistance(lua_State * L, std::shared_ptr<BattleStackMoved> object);
+	static int setTeleporting(lua_State * L, std::shared_ptr<BattleStackMoved> object);
 };
 
 }

@@ -20,7 +20,7 @@ namespace api
 
 const std::string ServerCbProxy::CLASSNAME = "ServerCb";
 
-const std::vector<ServerCbProxy::Wrapper::RegType> ServerCbProxy::REGISTER =
+const std::vector<ServerCbProxy::RegType> ServerCbProxy::REGISTER =
 {
 	{
 		"commitPackage",
@@ -28,7 +28,7 @@ const std::vector<ServerCbProxy::Wrapper::RegType> ServerCbProxy::REGISTER =
 	}
 };
 
-int ServerCbProxy::commitPackage(lua_State * L, Object * object)
+int ServerCbProxy::commitPackage(lua_State * L, ServerCb * object)
 {
 	if(lua_isuserdata(L, 1) != 1)
 	{

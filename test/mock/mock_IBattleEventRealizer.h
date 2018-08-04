@@ -10,7 +10,6 @@
 
 #pragma once
 
-
 #include "../../lib/battle/IBattleEventRealizer.h"
 
 class IBattleEventRealizerMock : public IBattleEventRealizer

@@ -350,8 +350,6 @@ public:
 	ERMInterpreter(vstd::CLoggerBase * logger_);
 	virtual ~ERMInterpreter();
 
-	void executeInstructions(); //called when starting a new game, before most of the map settings are done
-
 	void scanScripts(); //scans for functions, triggers etc.
 
 	int getRealLine(const VERMInterpreter::LinePointer &lp);

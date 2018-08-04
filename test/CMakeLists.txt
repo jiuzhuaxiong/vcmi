@@ -27,6 +27,7 @@ set(test_SRCS
 		battle/CUnitStateMagicTest.cpp
 		battle/battle_UnitTest.cpp
 
+		erm/ERM_BU.cpp
 		erm/ExamplesTest.cpp
 		erm/ERMPersistenceTest.cpp
 
@@ -67,11 +68,12 @@ set(test_SRCS
  		spells/targetConditions/ReceptiveFeatureConditionTest.cpp
  		spells/targetConditions/SpellEffectConditionTest.cpp
  		spells/targetConditions/TargetConditionItemFixture.cpp
-		
+
 		vcai/mock_ResourceManager.cpp
 		vcai/mock_VCAI.cpp
 		vcai/ResurceManagerTest.cpp
 
+		mock/BattleFake.cpp
  		mock/mock_IGameCallback.cpp
  		mock/mock_MapService.cpp
  		mock/mock_BonusBearer.cpp
@@ -91,14 +93,15 @@ set(test_HEADERS
 		spells/effects/EffectFixture.h
 
 		spells/targetConditions/TargetConditionItemFixture.h
-		
+
 		vcai/ResourceManagerTest.h
 
+		mock/BattleFake.h
 		mock/mock_BonusBearer.h
  		mock/mock_IGameCallback.h
  		mock/mock_MapService.h
 		mock/mock_BonusBearer.h
-		
+
 )
 
 assign_source_group(${test_SRCS} ${test_HEADERS})
@@ -108,6 +111,8 @@ set(mock_HEADERS
 		mock/mock_battle_Unit.h
 		mock/mock_Creature.h
 		mock/mock_CreatureService.h
+		mock/mock_IBattleInfoCallback.h
+		mock/mock_IBattleEventRealizer.h
 		mock/mock_scripting_Context.h
 		mock/mock_scripting_Script.h
 		mock/mock_scripting_Service.h
@@ -118,7 +123,7 @@ set(mock_HEADERS
 		mock/mock_UnitInfo.h
 		mock/mock_vstd_RNG.h
 		mock/mock_CPSICallback.h
-		
+
 		vcai/mock_ResourceManager.h
 		vcai/mock_VCAI.h
 		vcai/mock_VCAI_CGoal.h

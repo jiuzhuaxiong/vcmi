@@ -83,4 +83,30 @@ TEST_F(ERMPersistenceTest, QuickVar)
 	c.compare("state", actualState, state);
 }
 
+TEST_F(ERMPersistenceTest, RegularVar)
+{
+	const int VALUE = 4242;
+
+	JsonNode state;
+	state["ERM"]["v"]["57"].Integer() = VALUE;
+
+	std::stringstream builder;
+	builder << "VERM" << std::endl;
+	builder << "!#VRv57:-28;" << std::endl;
+
+	loadScript(VLC->scriptHandler->erm, builder.str());
+
+	run(state);
+
+	JsonNode actualState = context->saveState();
+
+	SCOPED_TRACE("\n" + subject->code);
+
+	state["ERM"]["v"]["57"].Float() = VALUE - 28;
+	state["ERM"]["instructionsCalled"].Bool() = true;
+
+	JsonComparer c(false);
+	c.compare("state", actualState, state);
+}
+
 }

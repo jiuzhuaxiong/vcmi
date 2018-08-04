@@ -30,6 +30,16 @@ void LuaStack::clear()
 	lua_settop(L, 0);
 }
 
+void LuaStack::pushNil()
+{
+	lua_pushnil(L);
+}
+
+void LuaStack::pushInteger(lua_Integer value)
+{
+	lua_pushinteger(L, value);
+}
+
 bool LuaStack::tryGetBool(int position, bool & value)
 {
 	if(!lua_isboolean(L, position))
@@ -68,6 +78,13 @@ bool LuaStack::tryGetString(int position, std::string & value)
 }
 
 int LuaStack::retNil()
+{
+	clear();
+	pushNil();
+	return 1;
+}
+
+int LuaStack::retVoid()
 {
 	clear();
 	return 0;

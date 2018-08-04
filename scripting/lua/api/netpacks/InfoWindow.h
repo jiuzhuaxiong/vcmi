@@ -19,16 +19,15 @@ namespace api
 namespace netpacks
 {
 
-class InfoWindowProxy
+class InfoWindowProxy : public SharedWrapper<InfoWindow, InfoWindowProxy>
 {
 public:
-	using Object = InfoWindow;
-	using Wrapper = SharedWrapper<Object, InfoWindowProxy>;
+	using Wrapper = SharedWrapper<InfoWindow, InfoWindowProxy>;
 
-	static int addReplacement(lua_State * L, std::shared_ptr<Object> object);
-	static int addText(lua_State * L, std::shared_ptr<Object> object);
+	static int addReplacement(lua_State * L, std::shared_ptr<InfoWindow> object);
+	static int addText(lua_State * L, std::shared_ptr<InfoWindow> object);
 
-	static const std::vector<Wrapper::RegType> REGISTER;
+	static const std::vector<typename Wrapper::RegType> REGISTER;
 	static const std::string CLASSNAME;
 };
 

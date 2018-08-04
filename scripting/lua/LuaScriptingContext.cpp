@@ -17,6 +17,9 @@
 
 #include "api/Registry.h"
 
+#include "api/GameCb.h"
+#include "api/BattleCb.h"
+
 #include "api/ServerCb.h"
 #include "api/BattleServerCb.h"
 
@@ -92,10 +95,16 @@ void LuaContext::cleanupGlobals()
 	//math.randomseed
 }
 
-void LuaContext::init(const IGameInfoCallback * cb, const CBattleInfoCallback * battleCb)
+void LuaContext::init(const GameCb * cb, const BattleCb * battleCb)
 {
 	icb = cb;
 	bicb = battleCb;
+
+	push(icb);
+	lua_setglobal(L, "GAME");
+
+	push(bicb);
+	lua_setglobal(L, "BATTLE");
 }
 
 void LuaContext::run(const JsonNode & initialState)
@@ -361,7 +370,7 @@ void LuaContext::pop(JsonNode & value)
 				JsonNode fieldValue;
 				pop(fieldValue);
 
-				if(lua_isnumber(L, -1))
+				if(lua_type(L, -1) == LUA_TNUMBER)
 				{
 					auto key = lua_tointeger(L, -1);
 
@@ -415,12 +424,22 @@ void LuaContext::push(lua_CFunction f, void * opaque)
 
 void LuaContext::push(ServerCb * cb)
 {
-	api::ServerCbProxy::Wrapper::push(L, cb);
+	api::ServerCbProxy::push(L, cb);
 }
 
 void LuaContext::push(ServerBattleCb * cb)
 {
-	api::BattleServerCbProxy::Wrapper::push(L, cb);
+	api::BattleServerCbProxy::push(L, cb);
+}
+
+void LuaContext::push(const GameCb * cb)
+{
+	api::GameCbProxy::push(L, cb);
+}
+
+void LuaContext::push(const BattleCb * cb)
+{
+	api::BattleCbProxy::push(L, cb);
 }
 
 void LuaContext::popAll()
@@ -440,9 +459,16 @@ void LuaContext::registerCore()
 	push(&LuaContext::require, this);
 	lua_setglobal(L, "require");
 
-	api::ServerCbProxy::Wrapper::registrator(L);
+	api::ServerCbProxy::registrator(L);
 	lua_settop(L, 0);
-	api::BattleServerCbProxy::Wrapper::registrator(L);
+
+	api::BattleServerCbProxy::registrator(L);
+	lua_settop(L, 0);
+
+	api::GameCbProxy::registrator(L);
+	lua_settop(L, 0);
+
+	api::BattleCbProxy::registrator(L);
 	lua_settop(L, 0);
 }
 
@@ -548,11 +574,14 @@ int LuaContext::loadModule()
 int LuaContext::print(lua_State * L)
 {
 	//TODO:
+	lua_settop(L, 0);
+	return 0;
 }
 
 int LuaContext::printImpl()
 {
 	//TODO:
+	return 0;
 }
 
 

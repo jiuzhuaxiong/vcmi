@@ -26,13 +26,13 @@ namespace scripting
 template<class T, class U = T> class OpaqueWrapper
 {
 public:
-	using UData = T *;
+	using Object = T *;
 
-	static void push(lua_State * L, UData value)
+	static void push(lua_State * L, Object value)
 	{
-		void * raw = lua_newuserdata(L, sizeof(UData));
+		void * raw = lua_newuserdata(L, sizeof(Object));
 
-		UData * ptr = static_cast<UData *>(raw);
+		Object * ptr = static_cast<Object *>(raw);
 		*ptr = value;
 
 		luaL_getmetatable(L, U::CLASSNAME.c_str());
@@ -74,7 +74,7 @@ public:
 
 		if(objPtr)
 		{
-			auto obj = static_cast<UData *>(objPtr);
+			auto obj = static_cast<Object *>(objPtr);
 			return (U::REGISTER[i].functor)(L, *obj);
 		}
 
@@ -84,7 +84,7 @@ public:
 	struct RegType
 	{
 		const char * name;
-		int(* functor)(lua_State *, UData);
+		int(* functor)(lua_State *, Object);
 	};
 
 };
@@ -92,7 +92,7 @@ public:
 template<class T, class U = T> class SharedWrapper
 {
 public:
-	using UData = std::shared_ptr<T>;
+	using Object = std::shared_ptr<T>;
 
 	static int registrator(lua_State * L)
 	{
@@ -136,7 +136,7 @@ public:
 
 		lua_newtable(L);
 
-		void * raw = lua_newuserdata(L, sizeof(UData));
+		void * raw = lua_newuserdata(L, sizeof(Object));
 
 		if(!raw)
 		{
@@ -144,7 +144,7 @@ public:
 			return 0;
 		}
 
-		new(raw) UData(obj);
+		new(raw) Object(obj);
 
 		luaL_getmetatable(L, U::CLASSNAME.c_str());
 
@@ -171,7 +171,7 @@ public:
 			return 0;
 		}
 
-		auto obj = *(static_cast<UData *>(raw));
+		auto obj = *(static_cast<Object *>(raw));
 
 		lua_remove(L, 1);
 
@@ -183,7 +183,7 @@ public:
 		void * objPtr = luaL_checkudata(L, 1, U::CLASSNAME.c_str());
 		if(objPtr)
 		{
-			auto obj = static_cast<UData *>(objPtr);
+			auto obj = static_cast<Object *>(objPtr);
 			obj->reset();
 		}
 
@@ -193,7 +193,7 @@ public:
 	struct RegType
 	{
 		const char * name;
-		int(* functor)(lua_State *, UData);
+		int(* functor)(lua_State *, Object);
 	};
 };
 

@@ -17,12 +17,14 @@
 #include "../../lib/NetPacksBase.h"
 #include "../../lib/battle/CBattleInfoCallback.h"
 
+#include "../mock/mock_IBattleInfoCallback.h"
 #include "../mock/mock_IGameEventRealizer.h"
 #include "../mock/mock_IGameInfoCallback.h"
 #include "../mock/mock_battle_IBattleState.h"
 #include "../mock/mock_scripting_Pool.h"
 #include "../mock/mock_scripting_Environment.h"
 #include "../mock/mock_vstd_CLoggerBase.h"
+#include "../mock/BattleFake.h"
 
 #include "../JsonComparer.h"
 
@@ -35,25 +37,16 @@ using namespace ::scripting;
 class ScriptFixture
 {
 public:
-	class BattleFake : public CBattleInfoCallback, public BattleStateMock
-	{
-		std::shared_ptr<PoolMock> pool;
-	public:
-		BattleFake(std::shared_ptr<PoolMock> pool_);
-
-		void setUp();
-
-		scripting::Pool * getContextPool() const override;
-	};
-
 	std::shared_ptr<PoolMock> pool;
 
 	std::shared_ptr<ScriptImpl> subject;
 	std::shared_ptr<Context> context;
 
-	std::shared_ptr<BattleFake> battleFake;
+	battle::UnitsFake unitsFake;
 
 	EnvironmentMock environmentMock;
+
+	StrictMock<IBattleInfoCallbackMock> binfoMock;
 	StrictMock<IGameInfoCallbackMock> infoMock;
 	StrictMock<IGameEventRealizerMock> applierMock;
     LoggerMock loggerMock;

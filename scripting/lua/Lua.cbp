@@ -63,6 +63,7 @@
 			<Add directory="../.." />
 		</Linker>
 		<Unit filename="CMakeLists.txt" />
+		<Unit filename="LuaCallWrapper.h" />
 		<Unit filename="LuaScriptModule.cpp" />
 		<Unit filename="LuaScriptModule.h" />
 		<Unit filename="LuaScriptingContext.cpp" />
@@ -76,8 +77,12 @@
 			<Option compile="1" />
 			<Option weight="0" />
 		</Unit>
+		<Unit filename="api/BattleCb.cpp" />
+		<Unit filename="api/BattleCb.h" />
 		<Unit filename="api/BattleServerCb.cpp" />
 		<Unit filename="api/BattleServerCb.h" />
+		<Unit filename="api/GameCb.cpp" />
+		<Unit filename="api/GameCb.h" />
 		<Unit filename="api/Registry.cpp" />
 		<Unit filename="api/Registry.h" />
 		<Unit filename="api/ServerCb.cpp" />

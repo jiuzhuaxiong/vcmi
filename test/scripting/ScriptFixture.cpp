@@ -16,23 +16,6 @@ namespace test
 using namespace ::testing;
 using namespace ::scripting;
 
-ScriptFixture::BattleFake::BattleFake(std::shared_ptr<PoolMock> pool_)
-	: CBattleInfoCallback(),
-	BattleStateMock(),
-	pool(pool_)
-{
-}
-
-void ScriptFixture::BattleFake::setUp()
-{
-	CBattleInfoCallback::setBattle(this);
-}
-
-Pool * ScriptFixture::BattleFake::getContextPool() const
-{
-	return pool.get();
-}
-
 ScriptFixture::ScriptFixture() =  default;
 
 ScriptFixture::~ScriptFixture() = default;
@@ -66,10 +49,7 @@ void ScriptFixture::setUp()
 {
 	pool = std::make_shared<PoolMock>();
 
-	battleFake = std::make_shared<BattleFake>(pool);
-	battleFake->setUp();
-
-	EXPECT_CALL(environmentMock, battle()).WillRepeatedly(Return(battleFake.get()));
+	EXPECT_CALL(environmentMock, battle()).WillRepeatedly(Return(&binfoMock));
 	EXPECT_CALL(environmentMock, game()).WillRepeatedly(Return(&infoMock));
 	EXPECT_CALL(environmentMock, logger()).WillRepeatedly(Return(&loggerMock));
 }

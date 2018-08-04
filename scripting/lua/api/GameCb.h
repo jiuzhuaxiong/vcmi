@@ -1,5 +1,5 @@
 /*
- * BattleServerCb.h, part of VCMI engine
+ * GameCb.h, part of VCMI engine
  *
  * Authors: listed in file AUTHORS in main folder
  *
@@ -11,7 +11,7 @@
 #pragma once
 
 #include "../../../lib/ScriptingService.h"
-#include "../../../lib/battle/IBattleEventRealizer.h"
+#include "../../../lib/CGameInfoCallback.h"
 
 #include "../LuaWrapper.h"
 
@@ -20,15 +20,14 @@ namespace scripting
 namespace api
 {
 
-class BattleServerCbProxy : public OpaqueWrapper<ServerBattleCb, BattleServerCbProxy>
+class GameCbProxy : public OpaqueWrapper<const GameCb, GameCbProxy>
 {
 public:
-	using Wrapper = OpaqueWrapper<ServerBattleCb, BattleServerCbProxy>;
+	using Wrapper = OpaqueWrapper<const GameCb, GameCbProxy>;
 
 	static const std::vector<typename Wrapper::RegType> REGISTER;
 	static const std::string CLASSNAME;
 
-	static int moveUnit(lua_State * L, ServerBattleCb * object);
 };
 
 }
