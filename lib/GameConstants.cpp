@@ -54,6 +54,11 @@ const CArtifact * ArtifactID::toArtifact() const
 	return VLC->arth->artifacts.at(*this);
 }
 
+const Artifact * ArtifactID::toArtifact(const ArtifactService * service) const
+{
+	return service->getArtifact(*this);
+}
+
 si32 ArtifactID::decode(const std::string & identifier)
 {
 	auto rawId = VLC->modh->identifiers.getIdentifier("core", "artifact", identifier);

@@ -152,6 +152,11 @@ std::shared_ptr<Context> PoolImpl::getContext(const Script * script)
 	}
 }
 
+const Services * PoolImpl::services() const
+{
+	return VLC;
+}
+
 const GameCb * PoolImpl::game() const
 {
 	return gameCb;

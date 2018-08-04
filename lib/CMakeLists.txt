@@ -184,6 +184,7 @@ set(lib_HEADERS
 		../include/vcmi/spells/Spell.h
 
 		../include/vcmi/Artifact.h
+		../include/vcmi/ArtifactService.h
 		../include/vcmi/Creature.h
 		../include/vcmi/CreatureService.h
 		../include/vcmi/Services.h

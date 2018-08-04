@@ -10,6 +10,7 @@
 #pragma once
 
 #include <vcmi/Artifact.h>
+#include <vcmi/ArtifactService.h>
 
 #include "HeroBonus.h"
 #include "GameConstants.h"
@@ -229,7 +230,7 @@ public:
 	}
 };
 
-class DLL_LINKAGE CArtHandler : public IHandlerBase
+class DLL_LINKAGE CArtHandler : public IHandlerBase, public ArtifactService
 {
 public:
 	std::vector<CArtifact*> treasures, minors, majors, relics; //tmp vectors!!! do not touch if you don't know what you are doing!!!
@@ -237,6 +238,8 @@ public:
 	std::vector< ConstTransitivePtr<CArtifact> > artifacts;
 	std::vector<CArtifact *> allowedArtifacts;
 	std::set<ArtifactID> growingArtifacts;
+
+	const Artifact * getArtifact(const ArtifactID & artifactID) const override;
 
 	void addBonuses(CArtifact *art, const JsonNode &bonusList);
 

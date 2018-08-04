@@ -55,6 +55,11 @@ DLL_LINKAGE void loadDLLClasses(bool onlyEssential)
 	VLC->init(onlyEssential);
 }
 
+const ArtifactService * LibClasses::artifactService() const
+{
+	return arth;
+}
+
 const CreatureService * LibClasses::creatureService() const
 {
 	return creh;

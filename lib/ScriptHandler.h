@@ -72,6 +72,7 @@ public:
 	PoolImpl(const GameCb * gameCb_, const BattleCb * battleCb_);
 	std::shared_ptr<Context> getContext(const Script * script) override;
 
+	const Services * services() const override;
 	const BattleCb * battle() const override;
 	const GameCb * game() const override;
 	::vstd::CLoggerBase * logger() const override;
