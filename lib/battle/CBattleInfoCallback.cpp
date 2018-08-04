@@ -9,10 +9,12 @@
  */
 #include "StdInc.h"
 #include "CBattleInfoCallback.h"
+
+#include <vcmi/scripting/Service.h>
+
 #include "../CStack.h"
 #include "BattleInfo.h"
 #include "../NetPacks.h"
-#include "../ScriptingService.h"
 #include "../spells/CSpellHandler.h"
 #include "../mapObjects/CGTownInstance.h"
 

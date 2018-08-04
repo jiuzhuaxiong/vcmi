@@ -1,5 +1,5 @@
 /*
- * ScriptingService.h, part of VCMI engine
+ * scripting/Service.h, part of VCMI engine
  *
  * Authors: listed in file AUTHORS in main folder
  *

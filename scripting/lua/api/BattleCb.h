@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "../../../lib/ScriptingService.h"
+#include <vcmi/scripting/Service.h>
 #include "../../../lib/battle/IBattleInfoCallback.h"
 
 #include "../LuaWrapper.h"

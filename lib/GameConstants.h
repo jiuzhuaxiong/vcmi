@@ -25,7 +25,7 @@ class CNonConstInfoCallback;
 namespace spells
 {
 	class Spell;
-	class SpellService;
+	class Service;
 }
 
 namespace GameConstants
@@ -1032,7 +1032,7 @@ public:
 	{}
 
 	DLL_LINKAGE const CSpell * toSpell() const; //deprecated
-	DLL_LINKAGE const spells::Spell * toSpell(const spells::SpellService * service) const;
+	DLL_LINKAGE const spells::Spell * toSpell(const spells::Service * service) const;
 
 	ID_LIKE_CLASS_COMMON(SpellID, ESpellID)
 

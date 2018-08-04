@@ -68,7 +68,7 @@ public:
 
 	MOCK_CONST_METHOD0(creatureService, const CreatureService *());
 	MOCK_CONST_METHOD0(scriptingService, const scripting::Service *());
-	MOCK_CONST_METHOD0(spellService, const SpellService *());
+	MOCK_CONST_METHOD0(spellService, const Service *());
 
 	MOCK_CONST_METHOD0(game, const IGameInfoCallback * ());
 	MOCK_CONST_METHOD0(battle, const CBattleInfoCallback * ());

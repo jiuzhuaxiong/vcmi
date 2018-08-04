@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "ScriptingService.h"
+#include <vcmi/scripting/Service.h>
 #include "IHandlerBase.h"
 #include "JsonNode.h"
 

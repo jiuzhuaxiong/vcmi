@@ -9,7 +9,7 @@
  */
 
 #pragma once
-#include "Magic.h"
+#include <vcmi/spells/Magic.h>
 #include "../JsonNode.h"
 #include "../IHandlerBase.h"
 #include "../ConstTransitivePtr.h"
@@ -415,7 +415,7 @@ private:
 
 bool DLL_LINKAGE isInScreenRange(const int3 &center, const int3 &pos); //for spells like Dimension Door
 
-class DLL_LINKAGE CSpellHandler: public CHandlerBase<SpellID, CSpell>, public spells::SpellService
+class DLL_LINKAGE CSpellHandler: public CHandlerBase<SpellID, CSpell>, public spells::Service
 {
 public:
 	CSpellHandler();

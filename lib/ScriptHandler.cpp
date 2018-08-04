@@ -11,9 +11,11 @@
 
 #include "ScriptHandler.h"
 
+#include <vcmi/Services.h>
+
 #include "CGameInterface.h"
 #include "CScriptingModule.h"
-#include "Services.h"
+
 #include "VCMIDirs.h"
 #include "serializer/JsonDeserializer.h"
 #include "serializer/JsonSerializer.h"

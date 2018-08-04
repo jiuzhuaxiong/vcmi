@@ -9,10 +9,11 @@
  */
 #pragma once
 
+#include <vcmi/Artifact.h>
+
 #include "HeroBonus.h"
 #include "GameConstants.h"
 #include "IHandlerBase.h"
-#include "Artifact.h"
 
 class CArtHandler;
 class CArtifact;
@@ -228,7 +229,7 @@ public:
 	}
 };
 
-class DLL_LINKAGE CArtHandler : public IHandlerBase //handles artifacts
+class DLL_LINKAGE CArtHandler : public IHandlerBase
 {
 public:
 	std::vector<CArtifact*> treasures, minors, majors, relics; //tmp vectors!!! do not touch if you don't know what you are doing!!!

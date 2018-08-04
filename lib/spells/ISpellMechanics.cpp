@@ -782,7 +782,7 @@ const scripting::Service * BaseMechanics::scriptingService() const
 	return VLC->scriptingService(); //todo: redirect
 }
 
-const SpellService * BaseMechanics::spellService() const
+const Service * BaseMechanics::spellService() const
 {
 	return VLC->spellService(); //todo: redirect
 }

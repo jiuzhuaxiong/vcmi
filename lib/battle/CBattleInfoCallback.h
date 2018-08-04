@@ -8,10 +8,12 @@
  *
  */
 #pragma once
+
+#include <vcmi/spells/Magic.h>
+
 #include "CCallbackBase.h"
 #include "ReachabilityInfo.h"
 #include "BattleAttackInfo.h"
-#include "../spells/Magic.h"
 
 class CGHeroInstance;
 class CStack;

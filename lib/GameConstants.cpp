@@ -16,11 +16,12 @@
 #include "../Version.h"
 #endif
 
+#include <vcmi/spells/Service.h>
+
 #include "VCMI_Lib.h"
 #include "mapObjects/CObjectClassesHandler.h"
 #include "CArtHandler.h"
 #include "CCreatureHandler.h"
-#include "spells/SpellService.h"
 #include "spells/CSpellHandler.h" //todo: remove
 #include "CSkillHandler.h"
 #include "StringConstants.h"
@@ -101,7 +102,7 @@ const CSpell * SpellID::toSpell() const
 	return VLC->spellh->objects[*this];
 }
 
-const spells::Spell * SpellID::toSpell(const spells::SpellService * service) const
+const spells::Spell * SpellID::toSpell(const spells::Service * service) const
 {
 	return service->getSpell(*this);
 }

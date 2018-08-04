@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "Magic.h"
+#include <vcmi/spells/Magic.h>
 #include "../battle/Destination.h"
 #include "../int3.h"
 #include "../GameConstants.h"
@@ -273,7 +273,7 @@ public:
 	//Global environment facade
 	virtual const CreatureService * creatureService() const = 0;
 	virtual const scripting::Service * scriptingService() const = 0;
-	virtual const SpellService * spellService() const = 0;
+	virtual const Service * spellService() const = 0;
 
 	virtual const IGameInfoCallback * game() const = 0;
 	virtual const CBattleInfoCallback * battle() const = 0;
@@ -329,7 +329,7 @@ public:
 
 	const CreatureService * creatureService() const override;
 	const scripting::Service * scriptingService() const override;
-	const SpellService * spellService() const override;
+	const Service * spellService() const override;
 
 	const IGameInfoCallback * game() const override;
 	const CBattleInfoCallback * battle() const override;

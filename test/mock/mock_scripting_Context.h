@@ -10,8 +10,9 @@
 
 #pragma once
 
+#include <vcmi/scripting/Service.h>
+
 #include "../../../lib/JsonNode.h"
-#include "../../../lib/ScriptingService.h"
 
 namespace scripting
 {

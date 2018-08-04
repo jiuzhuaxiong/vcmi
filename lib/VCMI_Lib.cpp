@@ -65,7 +65,7 @@ const scripting::Service * LibClasses::scriptingService() const
 	return scriptHandler;
 }
 
-const spells::SpellService * LibClasses::spellService() const
+const spells::Service * LibClasses::spellService() const
 {
 	return spellh;
 }

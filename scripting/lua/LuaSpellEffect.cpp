@@ -11,12 +11,13 @@
 
 #include "LuaSpellEffect.h"
 
+#include <vcmi/scripting/Service.h>
+
 #include "../../lib/spells/effects/Registry.h"
 #include "../../lib/spells/ISpellMechanics.h"
 
 #include "../../lib/battle/Unit.h"
 #include "../../lib/battle/CBattleInfoCallback.h"
-#include "../../lib/ScriptingService.h"
 #include "../../lib/serializer/JsonSerializeFormat.h"
 
 static const std::string APPLICABLE_GENERAL = "applicable";
