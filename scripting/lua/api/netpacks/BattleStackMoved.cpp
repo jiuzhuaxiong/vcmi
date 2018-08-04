@@ -27,8 +27,6 @@ namespace api
 namespace netpacks
 {
 
-const std::string BattleStackMovedProxy::CLASSNAME = "netpacks.BattleStackMoved";
-
 const std::vector<BattleStackMovedProxy::RegType> BattleStackMovedProxy::REGISTER =
 {
 	{
@@ -86,7 +84,7 @@ int BattleStackMovedProxy::setDistance(lua_State * L, std::shared_ptr<BattleStac
 int BattleStackMovedProxy::setTeleporting(lua_State * L, std::shared_ptr<BattleStackMoved> object)
 {
 	LuaStack S(L);
-	S.tryGetBool(1, object->teleporting);
+	S.tryGet(1, object->teleporting);
 	return S.retVoid();
 }
 

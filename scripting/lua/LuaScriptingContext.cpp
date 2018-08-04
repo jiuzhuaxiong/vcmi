@@ -100,10 +100,12 @@ void LuaContext::init(const GameCb * cb, const BattleCb * battleCb)
 	icb = cb;
 	bicb = battleCb;
 
-	push(icb);
+	LuaStack S(L);
+
+	S.push(icb);
 	lua_setglobal(L, "GAME");
 
-	push(bicb);
+	S.push(bicb);
 	lua_setglobal(L, "BATTLE");
 }
 
@@ -182,12 +184,13 @@ JsonNode LuaContext::callGlobal(const std::string & name, const JsonNode & param
 
 JsonNode LuaContext::callGlobal(ServerCb * cb, const std::string & name, const JsonNode & parameters)
 {
-	push(cb);
+	LuaStack S(L);
+	S.push(cb);
 	lua_setglobal(L, "SERVER");
 
 	auto ret = callGlobal(name, parameters);
 
-	lua_pushnil(L);
+	S.pushNil();
 	lua_setglobal(L, "SERVER");
 
 	return ret;
@@ -195,12 +198,13 @@ JsonNode LuaContext::callGlobal(ServerCb * cb, const std::string & name, const J
 
 JsonNode LuaContext::callGlobal(ServerBattleCb * cb, const std::string & name, const JsonNode & parameters)
 {
-	push(cb);
+	LuaStack S(L);
+	S.push(cb);
 	lua_setglobal(L, "BATTLESERVER");
 
 	auto ret = callGlobal(name, parameters);
 
-	lua_pushnil(L);
+	S.pushNil();
 	lua_setglobal(L, "BATTLESERVER");
 
 	return ret;
@@ -226,7 +230,7 @@ void LuaContext::getGlobal(const std::string & name, std::string & value)
 
 	lua_getglobal(L, name.c_str());
 
-	if(!S.tryGetString(-1, value))
+	if(!S.tryGet(-1, value))
 		value.clear();
 
 	S.balance();
@@ -238,7 +242,7 @@ void LuaContext::getGlobal(const std::string & name, double & value)
 
 	lua_getglobal(L, name.c_str());
 
-	if(!S.tryGetFloat(-1, value))
+	if(!S.tryGet(-1, value))
 		value = 0.0;
 
 	S.balance();
@@ -422,26 +426,6 @@ void LuaContext::push(lua_CFunction f, void * opaque)
 	lua_pushcclosure(L, f, 1);
 }
 
-void LuaContext::push(ServerCb * cb)
-{
-	api::ServerCbProxy::push(L, cb);
-}
-
-void LuaContext::push(ServerBattleCb * cb)
-{
-	api::BattleServerCbProxy::push(L, cb);
-}
-
-void LuaContext::push(const GameCb * cb)
-{
-	api::GameCbProxy::push(L, cb);
-}
-
-void LuaContext::push(const BattleCb * cb)
-{
-	api::BattleCbProxy::push(L, cb);
-}
-
 void LuaContext::popAll()
 {
 	lua_settop(L, 0);
@@ -459,16 +443,16 @@ void LuaContext::registerCore()
 	push(&LuaContext::require, this);
 	lua_setglobal(L, "require");
 
-	api::ServerCbProxy::registrator(L);
+	api::ServerCbProxy::registrator(L, api::TypeRegistry::get());
 	lua_settop(L, 0);
 
-	api::BattleServerCbProxy::registrator(L);
+	api::BattleServerCbProxy::registrator(L, api::TypeRegistry::get());
 	lua_settop(L, 0);
 
-	api::GameCbProxy::registrator(L);
+	api::GameCbProxy::registrator(L, api::TypeRegistry::get());
 	lua_settop(L, 0);
 
-	api::BattleCbProxy::registrator(L);
+	api::BattleCbProxy::registrator(L, api::TypeRegistry::get());
 	lua_settop(L, 0);
 }
 
@@ -526,7 +510,7 @@ int LuaContext::loadModule()
 			return errorRetVoid("Module not found: "+modulePath);
 		}
 
-		registar->perform(L);
+		registar->perform(L, api::TypeRegistry::get());
 	}
 	else if(scope == "core")
 	{

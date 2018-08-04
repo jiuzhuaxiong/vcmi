@@ -16,8 +16,6 @@ namespace scripting
 namespace api
 {
 
-const std::string GameCbProxy::CLASSNAME = "Game";
-
 const std::vector<GameCbProxy::RegType> GameCbProxy::REGISTER =
 {
 

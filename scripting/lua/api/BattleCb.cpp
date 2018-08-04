@@ -19,21 +19,40 @@ namespace scripting
 namespace api
 {
 
-const std::string BattleCbProxy::CLASSNAME = "Battle";
-
 const std::vector<BattleCbProxy::RegType> BattleCbProxy::REGISTER =
 {
 	{
-		"battleIsFinished",
-		&BattleCbProxy::battleIsFinished
+		"getUnitByPos",
+		&BattleCbProxy::getUnitByPos
+	},
+	{
+		"isFinished",
+		&BattleCbProxy::isFinished
 	}
 };
 
-int BattleCbProxy::battleIsFinished(lua_State * L, const BattleCb * object)
+int BattleCbProxy::getUnitByPos(lua_State * L, const BattleCb * object)
 {
 	LuaStack S(L);
-	auto ret = object->battleIsFinished();
-	S.push(ret);
+
+	BattleHex hex;
+
+	if(!S.tryGet(1, hex.hex))
+		return S.retNil();
+
+	bool onlyAlive;
+
+	if(!S.tryGet(2, onlyAlive))
+		onlyAlive = true;//same as default value in battleGetUnitByPos
+
+	S.push(object->battleGetUnitByPos(hex, onlyAlive));
+	return 1;
+}
+
+int BattleCbProxy::isFinished(lua_State * L, const BattleCb * object)
+{
+	LuaStack S(L);
+	S.push(object->battleIsFinished());
 	return 1;
 }
 

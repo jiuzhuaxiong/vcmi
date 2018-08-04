@@ -46,7 +46,7 @@ namespace ERMConverter
 			}
 			else
 			{
-				return boost::to_string(boost::format("ERM.%s") % val.varsym);
+				return boost::to_string(boost::format("quick['%s']") % val.varsym);
 			}
 		}
 
@@ -1443,6 +1443,7 @@ std::string ERMInterpreter::convert()
 	out << "local v = ERM.v" << std::endl;
 	out << "local z = ERM.z" << std::endl;
 	out << "local flag = ERM.flag" << std::endl;
+	out << "local quick = ERM.quick" << std::endl;
 
 	ERMConverter::convertInstructions(out, this);
 

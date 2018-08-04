@@ -1,14 +1,20 @@
 
 DATA = DATA or {}
 
-local ERM
+local ERM = {}
+local DATA = DATA
 
 DATA.ERM = DATA.ERM or {}
-ERM = DATA.ERM
 
-ERM.flag = ERM.flag or {}
-ERM.v = ERM.v or {}
-ERM.z = ERM.z or {}
+DATA.ERM.flag = DATA.ERM.flag or {}
+DATA.ERM.quick = DATA.ERM.quick or {}
+DATA.ERM.v = DATA.ERM.v or {}
+DATA.ERM.z = DATA.ERM.z or {}
+
+ERM.flag = DATA.ERM.flag
+ERM.quick = DATA.ERM.quick
+ERM.v = DATA.ERM.v
+ERM.z = DATA.ERM.z
 
 local y = {}
 
@@ -40,10 +46,10 @@ ERM.addTrigger = function(t)
 end
 
 ERM.callInstructions = function(cb)
-	if not ERM.instructionsCalled then
+	if not DATA.ERM.instructionsCalled then
 		cb()
 		ERM.callTrigger("PI")
-		ERM.instructionsCalled = true
+		DATA.ERM.instructionsCalled = true
 	end
 
 end

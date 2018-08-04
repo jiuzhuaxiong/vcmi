@@ -39,11 +39,7 @@ protected:
 		builder << "!?PI;" << std::endl;
 		builder << "!!BU:C?v851;" << std::endl;
 
-		loadScript(VLC->scriptHandler->erm, builder.str());
-
-		run();
-
-		JsonNode actualState = context->saveState();
+		JsonNode actualState = runScript(VLC->scriptHandler->erm, builder.str());
 
 		SCOPED_TRACE("\n" + subject->code);
 
@@ -63,13 +59,88 @@ TEST_F(ERM_BU_C, NotFinished)
 
 class ERM_BU_D : public ERM_BU
 {
+protected:
+	void doTest(double output)
+	{
 
+		std::stringstream builder;
+		builder << "VERM" << std::endl;
+		builder << "!?PI;" << std::endl;
+		builder << "!!BU:D75/?v1;" << std::endl;
+
+		JsonNode actualState = runScript(VLC->scriptHandler->erm, builder.str());
+
+		SCOPED_TRACE("\n" + subject->code);
+
+		EXPECT_EQ(actualState["ERM"]["v"]["1"], JsonUtils::floatNode(output)) << actualState.toJson(true);
+	}
 };
+
+TEST_F(ERM_BU_D, EmptyField)
+{
+	EXPECT_CALL(binfoMock, battleGetUnitByPos(_,_)).WillOnce(Return(nullptr));
+	doTest(-1);
+}
+
+TEST_F(ERM_BU_D, Alive)
+{
+	auto & unit = unitsFake.add(BattleSide::ATTACKER);
+	EXPECT_CALL(binfoMock, battleGetUnitByPos(Eq(BattleHex(75)), Eq(false))).WillOnce(Return(&unit));
+	EXPECT_CALL(unit, alive()).WillOnce(Return(true));
+	doTest(-2);
+}
+
+TEST_F(ERM_BU_D, Dead)
+{
+	auto & unit = unitsFake.add(BattleSide::ATTACKER);
+	EXPECT_CALL(binfoMock, battleGetUnitByPos(Eq(BattleHex(75)), Eq(false))).WillOnce(Return(&unit));
+	EXPECT_CALL(unit, alive()).WillOnce(Return(false));
+	EXPECT_CALL(unit, unitId()).WillOnce(Return(47));
+	doTest(47);
+}
+
 
 class ERM_BU_E : public ERM_BU
 {
+protected:
+	void doTest(double output)
+	{
+		std::stringstream builder;
+		builder << "VERM" << std::endl;
+		builder << "!?PI;" << std::endl;
+		builder << "!!BU:E75/?v1;" << std::endl;
 
+		JsonNode actualState = runScript(VLC->scriptHandler->erm, builder.str());
+
+		SCOPED_TRACE("\n" + subject->code);
+
+		EXPECT_EQ(actualState["ERM"]["v"]["1"], JsonUtils::floatNode(output)) << actualState.toJson(true);
+	}
 };
+
+TEST_F(ERM_BU_E, EmptyField)
+{
+	EXPECT_CALL(binfoMock, battleGetUnitByPos(_,_)).WillOnce(Return(nullptr));
+	doTest(-1);
+}
+
+TEST_F(ERM_BU_E, Alive)
+{
+	auto & unit = unitsFake.add(BattleSide::ATTACKER);
+	EXPECT_CALL(binfoMock, battleGetUnitByPos(Eq(BattleHex(75)), Eq(false))).WillOnce(Return(&unit));
+	EXPECT_CALL(unit, alive()).WillOnce(Return(true));
+	EXPECT_CALL(unit, unitId()).WillOnce(Return(47));
+	doTest(47);
+}
+
+TEST_F(ERM_BU_E, Dead)
+{
+	auto & unit = unitsFake.add(BattleSide::ATTACKER);
+	EXPECT_CALL(binfoMock, battleGetUnitByPos(Eq(BattleHex(75)), Eq(false))).WillOnce(Return(&unit));
+	EXPECT_CALL(unit, alive()).WillOnce(Return(false));
+	doTest(-1);
+}
+
 
 class ERM_BU_G : public ERM_BU
 {

@@ -59,4 +59,12 @@ void ScriptFixture::run(const JsonNode & scriptState)
 	context->run(scriptState);
 }
 
+JsonNode ScriptFixture::runScript(ModulePtr module, const std::string & scriptSource, const JsonNode & scriptState)
+{
+	loadScript(module, scriptSource);
+	run(scriptState);
+	return context->saveState();
+}
+
+
 }

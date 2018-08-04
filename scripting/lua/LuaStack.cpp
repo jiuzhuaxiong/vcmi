@@ -15,10 +15,19 @@ namespace scripting
 {
 
 LuaStack::LuaStack(lua_State * L_)
-	: L(L_)
+	: L(L_),
+	typeRegistry(api::TypeRegistry::get())
 {
 	initialTop = lua_gettop(L);
 }
+
+LuaStack::LuaStack(lua_State * L_, api::TypeRegistry * typeRegistry_)
+	: L(L_),
+	typeRegistry(typeRegistry_)
+{
+	initialTop = lua_gettop(L);
+}
+
 
 void LuaStack::balance()
 {
@@ -40,7 +49,12 @@ void LuaStack::pushInteger(lua_Integer value)
 	lua_pushinteger(L, value);
 }
 
-bool LuaStack::tryGetBool(int position, bool & value)
+void LuaStack::push(bool value)
+{
+	lua_pushboolean(L, value);
+}
+
+bool LuaStack::tryGet(int position, bool & value)
 {
 	if(!lua_isboolean(L, position))
 		return false;
@@ -48,7 +62,7 @@ bool LuaStack::tryGetBool(int position, bool & value)
 	return true;
 }
 
-bool LuaStack::tryGetFloat(int position, double & value)
+bool LuaStack::tryGet(int position, double & value)
 {
 	if(!lua_isnumber(L, position))
 		return false;
@@ -65,7 +79,7 @@ bool LuaStack::tryGetInteger(int position, lua_Integer & value)
 	return true;
 }
 
-bool LuaStack::tryGetString(int position, std::string & value)
+bool LuaStack::tryGet(int position, std::string & value)
 {
 	if(!lua_isstring(L, position))
 		return false;

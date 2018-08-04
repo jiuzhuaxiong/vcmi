@@ -12,6 +12,8 @@
 
 #include <lua.hpp>
 
+#include "api/Registry.h"
+
 namespace scripting
 {
 
@@ -19,13 +21,16 @@ class LuaStack
 {
 public:
 	LuaStack(lua_State * L_);
+	LuaStack(lua_State * L_, api::TypeRegistry * typeRegistry_);
 	void balance();
 	void clear();
 
 	void pushNil();
 	void pushInteger(lua_Integer value);
 
-	template<typename T, typename std::enable_if< std::is_integral<T>::value, int>::type = 0>
+	void push(bool value);
+
+	template<typename T, typename std::enable_if< std::is_integral<T>::value && !std::is_same<T, bool>::value, int>::type = 0>
 	void push(const T value)
 	{
 		pushInteger(static_cast<lua_Integer>(value));
@@ -40,20 +45,49 @@ public:
 			pushNil();
 	}
 
-	bool tryGetBool(int position, bool & value);
-	bool tryGetInteger(int position, lua_Integer & value);
-	bool tryGetFloat(int position, double & value);
-	bool tryGetString(int position, std::string & value);
-
-	template<typename Proxy>
-	bool tryGetShared(int position, typename Proxy::Object & value)
+	template<typename T, typename std::enable_if< std::is_class<T>::value, int>::type = 0>
+	void push(const T * value)
 	{
-		void * raw = luaL_checkudata(L, position, Proxy::CLASSNAME.c_str());
+		pushUData<const T>(value);
+	}
+
+	template<typename T, typename std::enable_if< std::is_class<T>::value, int>::type = 0>
+	void push(T * value)
+	{
+		pushUData<T>(value);
+	}
+
+	bool tryGetInteger(int position, lua_Integer & value);
+
+	bool tryGet(int position, bool & value);
+
+	template<typename T, typename std::enable_if< std::is_integral<T>::value && !std::is_same<T, bool>::value, int>::type = 0>
+	bool tryGet(int position, T & value)
+	{
+		lua_Integer temp;
+		if(tryGetInteger(position, temp))
+		{
+			value = static_cast<T>(temp);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool tryGet(int position, double & value);
+	bool tryGet(int position, std::string & value);
+
+	template<typename T>
+	bool tryGetShared(int position, std::shared_ptr<T> & value)
+	{
+		void * raw = luaL_checkudata(L, position, typeRegistry->getKey<std::shared_ptr<T> *>());
 
 		if(!raw)
 			return false;
 
-		value = *(static_cast<typename Proxy::Object *>(raw));
+		value = *(static_cast<std::shared_ptr<T> *>(raw));
 		return true;
 	}
 
@@ -62,7 +96,29 @@ public:
 
 private:
 	lua_State * L;
+	api::TypeRegistry * typeRegistry;
 	int initialTop;
+
+	template<typename UData>
+	void pushUData(UData * value)
+	{
+		if(value)
+		{
+			using Object = UData *;
+
+			void * raw = lua_newuserdata(L, sizeof(Object));
+
+			Object * ptr = static_cast<Object *>(raw);
+			*ptr = value;
+
+			luaL_getmetatable(L, typeRegistry->getKey<Object *>());
+			lua_setmetatable(L, -2);
+		}
+		else
+		{
+			pushNil();
+		}
+	}
 };
 
 }

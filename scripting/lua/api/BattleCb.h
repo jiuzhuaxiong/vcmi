@@ -26,9 +26,11 @@ public:
 	using Wrapper = OpaqueWrapper<const BattleCb, BattleCbProxy>;
 
 	static const std::vector<typename Wrapper::RegType> REGISTER;
-	static const std::string CLASSNAME;
 
-	static int battleIsFinished(lua_State * L, const BattleCb * object);
+	static int getUnitByPos(lua_State * L, const BattleCb * object);
+
+	static int isFinished(lua_State * L, const BattleCb * object);
+
 };
 
 }

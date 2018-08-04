@@ -28,7 +28,6 @@ public:
 	static int addText(lua_State * L, std::shared_ptr<InfoWindow> object);
 
 	static const std::vector<typename Wrapper::RegType> REGISTER;
-	static const std::string CLASSNAME;
 };
 
 }

@@ -18,8 +18,6 @@ namespace scripting
 namespace api
 {
 
-const std::string ServerCbProxy::CLASSNAME = "ServerCb";
-
 const std::vector<ServerCbProxy::RegType> ServerCbProxy::REGISTER =
 {
 	{

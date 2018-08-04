@@ -7,6 +7,8 @@ set(lib_SRCS
 		LuaSpellEffect.cpp
 		LuaStack.cpp
 
+		api/battle/UnitProxy.cpp
+
 		api/BattleCb.cpp
 		api/BattleServerCb.cpp
 		api/GameCb.cpp

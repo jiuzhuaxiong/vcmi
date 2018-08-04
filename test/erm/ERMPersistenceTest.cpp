@@ -49,7 +49,7 @@ TEST_F(ERMPersistenceTest, Empty)
 
 	SCOPED_TRACE("\n" + subject->code);
 
-	state["ERM"]["j"].Float() = 2;
+	state["ERM"]["quick"]["j"].Float() = 2;
 	state["ERM"]["instructionsCalled"].Bool() = true;
 
 	JsonComparer c(false);
@@ -62,7 +62,7 @@ TEST_F(ERMPersistenceTest, QuickVar)
 
 	JsonNode state;
 	state["foo"].String() = "foo";
-	state["ERM"]["m"].Integer() = VALUE;
+	state["ERM"]["quick"]["m"].Integer() = VALUE;
 
 	std::stringstream builder;
 	builder << "VERM" << std::endl;
@@ -76,7 +76,7 @@ TEST_F(ERMPersistenceTest, QuickVar)
 
 	SCOPED_TRACE("\n" + subject->code);
 
-	state["ERM"]["m"].Float() = VALUE + 2;
+	state["ERM"]["quick"]["m"].Float() = VALUE + 2;
 	state["ERM"]["instructionsCalled"].Bool() = true;
 
 	JsonComparer c(false);

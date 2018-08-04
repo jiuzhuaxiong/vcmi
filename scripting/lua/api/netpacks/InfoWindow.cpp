@@ -27,8 +27,6 @@ namespace api
 namespace netpacks
 {
 
-const std::string InfoWindowProxy::CLASSNAME = "netpacks.InfoWindow";
-
 const std::vector<InfoWindowProxy::RegType> InfoWindowProxy::REGISTER =
 {
 	{

@@ -28,7 +28,6 @@ public:
 	static int commitPackage(lua_State * L, ServerCb * object);
 
 	static const std::vector<typename Wrapper::RegType> REGISTER;
-	static const std::string CLASSNAME;
 };
 
 }

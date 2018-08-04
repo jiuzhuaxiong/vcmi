@@ -59,6 +59,8 @@ public:
 
 	void run(const JsonNode & scriptState = JsonNode());
 
+	JsonNode runScript(ModulePtr module, const std::string & scriptSource, const JsonNode & scriptState = JsonNode());
+
 protected:
 	void setUp();
 

@@ -26,7 +26,6 @@ public:
 	using Wrapper = OpaqueWrapper<ServerBattleCb, BattleServerCbProxy>;
 
 	static const std::vector<typename Wrapper::RegType> REGISTER;
-	static const std::string CLASSNAME;
 
 	static int moveUnit(lua_State * L, ServerBattleCb * object);
 };

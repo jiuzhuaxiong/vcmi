@@ -56,10 +56,6 @@ public:
 
 	void push(const std::string & value);
 	void push(lua_CFunction f, void * opaque);
-	void push(ServerCb * cb);
-	void push(ServerBattleCb * cb);
-	void push(const GameCb * cb);
-	void push(const BattleCb * cb);
 
 	std::string toStringRaw(int index);
 

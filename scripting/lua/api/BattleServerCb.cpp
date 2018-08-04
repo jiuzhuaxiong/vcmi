@@ -23,8 +23,6 @@ namespace scripting
 namespace api
 {
 
-const std::string BattleServerCbProxy::CLASSNAME = "BattleServerCb";
-
 const std::vector<BattleServerCbProxy::RegType> BattleServerCbProxy::REGISTER =
 {
 	{
@@ -39,7 +37,7 @@ int BattleServerCbProxy::moveUnit(lua_State * L, ServerBattleCb * object)
 
 	std::shared_ptr<BattleStackMoved> pack;
 
-	if(!S.tryGetShared<netpacks::BattleStackMovedProxy>(1, pack))
+	if(!S.tryGetShared<BattleStackMoved>(1, pack))
 		return S.retVoid();
 
 	object->apply(pack.get());

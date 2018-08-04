@@ -12,6 +12,8 @@
 
 #include <lua.hpp>
 
+#include "api/Registry.h"
+
 /*
  * Original code is LunaWrapper by nornagon.
  * https://lua-users.org/wiki/LunaWrapper
@@ -28,20 +30,9 @@ template<class T, class U = T> class OpaqueWrapper
 public:
 	using Object = T *;
 
-	static void push(lua_State * L, Object value)
+	static int registrator(lua_State * L, api::TypeRegistry * typeRegistry)
 	{
-		void * raw = lua_newuserdata(L, sizeof(Object));
-
-		Object * ptr = static_cast<Object *>(raw);
-		*ptr = value;
-
-		luaL_getmetatable(L, U::CLASSNAME.c_str());
-		lua_setmetatable(L, -2);
-	}
-
-	static int registrator(lua_State * L)
-	{
-		if(luaL_newmetatable(L, U::CLASSNAME.c_str()) != 0)
+		if(luaL_newmetatable(L, typeRegistry->getKey<Object *>()) != 0)
 		{
 			lua_pushstring(L, "__index");
 
@@ -68,7 +59,7 @@ public:
 	{
 		int i = (int)lua_tonumber(L, lua_upvalueindex(1));
 
-		void * objPtr = luaL_checkudata(L, 1, U::CLASSNAME.c_str());
+		void * objPtr = luaL_checkudata(L, 1, api::TypeRegistry::get()->getKey<Object *>());
 
 		lua_remove(L, 1);
 
@@ -94,9 +85,9 @@ template<class T, class U = T> class SharedWrapper
 public:
 	using Object = std::shared_ptr<T>;
 
-	static int registrator(lua_State * L)
+	static int registrator(lua_State * L, api::TypeRegistry * typeRegistry)
 	{
-		if(luaL_newmetatable(L, U::CLASSNAME.c_str()) != 0)
+		if(luaL_newmetatable(L, typeRegistry->getKey<Object *>()) != 0)
 		{
 			lua_Integer index = 0;
 
@@ -146,7 +137,7 @@ public:
 
 		new(raw) Object(obj);
 
-		luaL_getmetatable(L, U::CLASSNAME.c_str());
+		luaL_getmetatable(L, api::TypeRegistry::get()->getKey<Object *>());
 
 		if(!lua_istable(L, -1))
 		{
@@ -163,7 +154,7 @@ public:
 	{
 		int i = (int)lua_tonumber(L, lua_upvalueindex(1));
 
-		void * raw = luaL_checkudata(L, 1, U::CLASSNAME.c_str());
+		void * raw = luaL_checkudata(L, 1, api::TypeRegistry::get()->getKey<Object *>());
 
 		if(!raw)
 		{
@@ -180,7 +171,7 @@ public:
 
 	static int destructor(lua_State * L)
 	{
-		void * objPtr = luaL_checkudata(L, 1, U::CLASSNAME.c_str());
+		void * objPtr = luaL_checkudata(L, 1, api::TypeRegistry::get()->getKey<Object *>());
 		if(objPtr)
 		{
 			auto obj = static_cast<Object *>(objPtr);
