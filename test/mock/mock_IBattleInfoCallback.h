@@ -11,10 +11,13 @@
 #pragma once
 
 #include "../../lib/battle/IBattleInfoCallback.h"
+#include "../../lib/GameConstants.h"
 
 class IBattleInfoCallbackMock : public IBattleInfoCallback
 {
 public:
+	MOCK_CONST_METHOD0(battleTerrainType, ETerrainType());
+	MOCK_CONST_METHOD0(battleGetBattlefieldType, BFieldType());
 
 	MOCK_CONST_METHOD0(battleIsFinished, boost::optional<int>());
 

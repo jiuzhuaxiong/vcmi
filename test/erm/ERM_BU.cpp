@@ -147,6 +147,30 @@ class ERM_BU_G : public ERM_BU
 
 };
 
+TEST_F(ERM_BU_G, Get)
+{
+	std::stringstream builder;
+	builder << "VERM" << std::endl;
+	builder << "!?FU1;" << std::endl;
+	builder << "!!BU:G?v1;" << std::endl;
+	builder << "!?FU2;" << std::endl;
+	builder << "!!BU:G?v2;" << std::endl;
+
+	loadScript(VLC->scriptHandler->erm, builder.str());
+	run();
+
+	EXPECT_CALL(binfoMock, battleGetBattlefieldType()).WillOnce(Return(BFieldType::SNOW_TREES));
+	context->callGlobal("FU1", JsonNode());
+
+	EXPECT_CALL(binfoMock, battleGetBattlefieldType()).WillOnce(Return(BFieldType::EVIL_FOG));
+	context->callGlobal("FU2", JsonNode());
+
+	JsonNode actualState = context->saveState();
+
+	EXPECT_EQ(actualState["ERM"]["v"]["1"], JsonUtils::floatNode(-1)) << actualState.toJson(true);
+	EXPECT_EQ(actualState["ERM"]["v"]["2"], JsonUtils::floatNode(4)) << actualState.toJson(true);
+}
+
 class ERM_BU_M : public ERM_BU
 {
 

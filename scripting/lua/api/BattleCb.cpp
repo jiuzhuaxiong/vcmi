@@ -14,6 +14,8 @@
 #include "../LuaStack.h"
 #include "../LuaCallWrapper.h"
 
+#include "../../../lib/GameConstants.h"
+
 namespace scripting
 {
 namespace api
@@ -21,6 +23,14 @@ namespace api
 
 const std::vector<BattleCbProxy::RegType> BattleCbProxy::REGISTER =
 {
+	{
+		"getBattlefieldType",
+		&BattleCbProxy::getBattlefieldType
+	},
+	{
+		"getTerrainType",
+		&BattleCbProxy::getTerrainType
+	},
 	{
 		"getUnitByPos",
 		&BattleCbProxy::getUnitByPos
@@ -30,6 +40,22 @@ const std::vector<BattleCbProxy::RegType> BattleCbProxy::REGISTER =
 		&BattleCbProxy::isFinished
 	}
 };
+
+int BattleCbProxy::getBattlefieldType(lua_State * L, const BattleCb * object)
+{
+	LuaStack S(L);
+	auto ret = object->battleGetBattlefieldType();
+	S.push(static_cast<si32>(ret.num));
+	return 1;
+}
+
+int BattleCbProxy::getTerrainType(lua_State * L, const BattleCb * object)
+{
+	LuaStack S(L);
+	auto ret = object->battleTerrainType();
+	S.push(static_cast<si32>(ret.num));
+	return 1;
+}
 
 int BattleCbProxy::getUnitByPos(lua_State * L, const BattleCb * object)
 {

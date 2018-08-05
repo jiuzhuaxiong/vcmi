@@ -393,17 +393,13 @@ void LuaContext::pop(JsonNode & value)
 				}
 			}
 
-			if(!asStruct.Struct().empty())
-			{
-				std::swap(value, asStruct);
-			}
-			else if(!asVector.Vector().empty())
+			if(!asVector.Vector().empty())
 			{
 				std::swap(value, asVector);
 			}
 			else
 			{
-				value.clear();
+				std::swap(value, asStruct);
 			}
 		}
 		break;

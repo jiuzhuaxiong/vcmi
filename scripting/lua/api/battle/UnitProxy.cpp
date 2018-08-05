@@ -13,7 +13,7 @@
 #include "UnitProxy.h"
 
 #include "../../LuaStack.h"
-
+#include "../../LuaCallWrapper.h"
 #include "../Registry.h"
 
 namespace scripting
@@ -39,16 +39,12 @@ const std::vector<UnitProxy::RegType> UnitProxy::REGISTER =
 
 int UnitProxy::isAlive(lua_State * L, const Unit * object)
 {
-	LuaStack S(L);
-	S.push(object->alive());
-	return 1;
+	return LuaCallWrapper<const Unit>::wrap(L, object, &Unit::alive);
 }
 
 int UnitProxy::unitId(lua_State * L, const Unit * object)
 {
-	LuaStack S(L);
-	S.push(object->unitId());
-	return 1;
+	return LuaCallWrapper<const IUnitInfo>::wrap(L, object, &IUnitInfo::unitId);
 }
 
 
