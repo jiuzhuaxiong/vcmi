@@ -11,6 +11,8 @@
 
 #include "../scripting/ScriptFixture.h"
 
+#include "../../lib/NetPacks.h"
+
 namespace test
 {
 namespace scripting
@@ -34,12 +36,12 @@ protected:
 	{
 		EXPECT_CALL(binfoMock, battleIsFinished()).WillOnce(Return(input));
 
-		std::stringstream builder;
-		builder << "VERM" << std::endl;
-		builder << "!?PI;" << std::endl;
-		builder << "!!BU:C?v851;" << std::endl;
+		std::stringstream source;
+		source << "VERM" << std::endl;
+		source << "!?PI;" << std::endl;
+		source << "!!BU:C?v851;" << std::endl;
 
-		JsonNode actualState = runScript(VLC->scriptHandler->erm, builder.str());
+		JsonNode actualState = runScript(VLC->scriptHandler->erm, source.str());
 
 		SCOPED_TRACE("\n" + subject->code);
 
@@ -63,12 +65,12 @@ protected:
 	void doTest(double output)
 	{
 
-		std::stringstream builder;
-		builder << "VERM" << std::endl;
-		builder << "!?PI;" << std::endl;
-		builder << "!!BU:D75/?v1;" << std::endl;
+		std::stringstream source;
+		source << "VERM" << std::endl;
+		source << "!?PI;" << std::endl;
+		source << "!!BU:D75/?v1;" << std::endl;
 
-		JsonNode actualState = runScript(VLC->scriptHandler->erm, builder.str());
+		JsonNode actualState = runScript(VLC->scriptHandler->erm, source.str());
 
 		SCOPED_TRACE("\n" + subject->code);
 
@@ -105,12 +107,12 @@ class ERM_BU_E : public ERM_BU
 protected:
 	void doTest(double output)
 	{
-		std::stringstream builder;
-		builder << "VERM" << std::endl;
-		builder << "!?PI;" << std::endl;
-		builder << "!!BU:E75/?v1;" << std::endl;
+		std::stringstream source;
+		source << "VERM" << std::endl;
+		source << "!?PI;" << std::endl;
+		source << "!!BU:E75/?v1;" << std::endl;
 
-		JsonNode actualState = runScript(VLC->scriptHandler->erm, builder.str());
+		JsonNode actualState = runScript(VLC->scriptHandler->erm, source.str());
 
 		SCOPED_TRACE("\n" + subject->code);
 
@@ -149,14 +151,14 @@ class ERM_BU_G : public ERM_BU
 
 TEST_F(ERM_BU_G, Get)
 {
-	std::stringstream builder;
-	builder << "VERM" << std::endl;
-	builder << "!?FU1;" << std::endl;
-	builder << "!!BU:G?v1;" << std::endl;
-	builder << "!?FU2;" << std::endl;
-	builder << "!!BU:G?v2;" << std::endl;
+	std::stringstream source;
+	source << "VERM" << std::endl;
+	source << "!?FU1;" << std::endl;
+	source << "!!BU:G?v1;" << std::endl;
+	source << "!?FU2;" << std::endl;
+	source << "!!BU:G?v2;" << std::endl;
 
-	loadScript(VLC->scriptHandler->erm, builder.str());
+	loadScript(VLC->scriptHandler->erm, source.str());
 	run();
 
 	EXPECT_CALL(binfoMock, battleGetBattlefieldType()).WillOnce(Return(BFieldType::SNOW_TREES));
@@ -171,10 +173,50 @@ TEST_F(ERM_BU_G, Get)
 	EXPECT_EQ(actualState["ERM"]["v"]["2"], JsonUtils::floatNode(4)) << actualState.toJson(true);
 }
 
+//TODO: ERM_BU_G Set
+
 class ERM_BU_M : public ERM_BU
 {
 
 };
+
+TEST_F(ERM_BU_M, Simple)
+{
+	std::stringstream source;
+	source << "VERM" << std::endl;
+	source << "!?FU1;" << std::endl;
+	source << "!!BU:M^Test 1^;" << std::endl;
+	source << "!?FU2;" << std::endl;
+	source << "!!VRz3:S^Test 2^;" << std::endl;
+	source << "!!BU:Mz3;" << std::endl;
+
+	loadScript(VLC->scriptHandler->erm, source.str());
+	run();
+
+	auto checkApply1 = [&](BattleLogMessage * pack)
+	{
+		EXPECT_EQ(pack->lines.size(), 1);
+
+		if(!pack->lines.empty())
+			EXPECT_EQ(pack->lines[0].toString(), "Test 1");
+	};
+
+	EXPECT_CALL(battleApplierMock, apply(Matcher<BattleLogMessage *>(_))).WillOnce(Invoke(checkApply1));
+
+	context->callGlobal(&battleApplierMock, "FU1", JsonNode());
+
+	auto checkApply2 = [&](BattleLogMessage * pack)
+	{
+		EXPECT_EQ(pack->lines.size(), 1);
+
+		if(!pack->lines.empty())
+			EXPECT_EQ(pack->lines[0].toString(), "Test 2");
+	};
+
+	EXPECT_CALL(battleApplierMock, apply(Matcher<BattleLogMessage *>(_))).WillOnce(Invoke(checkApply2));
+
+	context->callGlobal(&battleApplierMock, "FU2", JsonNode());
+}
 
 class ERM_BU_O : public ERM_BU
 {

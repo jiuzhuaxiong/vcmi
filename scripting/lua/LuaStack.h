@@ -80,7 +80,7 @@ public:
 	bool tryGet(int position, std::string & value);
 
 	template<typename T>
-	bool tryGetShared(int position, std::shared_ptr<T> & value)
+	bool tryGet(int position, std::shared_ptr<T> & value)
 	{
 		void * raw = luaL_checkudata(L, position, typeRegistry->getKey<std::shared_ptr<T> *>());
 

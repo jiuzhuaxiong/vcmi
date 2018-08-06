@@ -17,6 +17,7 @@
 #include "../../lib/NetPacksBase.h"
 #include "../../lib/battle/CBattleInfoCallback.h"
 
+#include "../mock/mock_IBattleEventRealizer.h"
 #include "../mock/mock_IBattleInfoCallback.h"
 #include "../mock/mock_IGameEventRealizer.h"
 #include "../mock/mock_IGameInfoCallback.h"
@@ -49,6 +50,7 @@ public:
 	StrictMock<IBattleInfoCallbackMock> binfoMock;
 	StrictMock<IGameInfoCallbackMock> infoMock;
 	StrictMock<IGameEventRealizerMock> applierMock;
+	StrictMock<IBattleEventRealizerMock> battleApplierMock;
     LoggerMock loggerMock;
 
 	ScriptFixture();

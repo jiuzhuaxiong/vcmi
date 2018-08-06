@@ -42,8 +42,6 @@ Effect * LuaSpellEffectFactory::create() const
 	return new LuaSpellEffect(script);
 }
 
-
-
 LuaSpellEffect::LuaSpellEffect(const Script * script_)
 	: script(script_)
 {

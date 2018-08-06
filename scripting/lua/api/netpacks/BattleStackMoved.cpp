@@ -15,17 +15,14 @@
 
 #include "../Registry.h"
 
-using scripting::api::netpacks::BattleStackMovedProxy;
-using scripting::api::RegisterAPI;
-
-VCMI_REGISTER_SCRIPT_API(BattleStackMovedProxy, "netpacks.BattleStackMoved")
-
 namespace scripting
 {
 namespace api
 {
 namespace netpacks
 {
+
+VCMI_REGISTER_SCRIPT_API(BattleStackMovedProxy, "netpacks.BattleStackMoved");
 
 const std::vector<BattleStackMovedProxy::RegType> BattleStackMovedProxy::REGISTER =
 {
@@ -64,20 +61,14 @@ int BattleStackMovedProxy::addTileToMove(lua_State * L, std::shared_ptr<BattleSt
 int BattleStackMovedProxy::setUnitId(lua_State * L, std::shared_ptr<BattleStackMoved> object)
 {
 	LuaStack S(L);
-	lua_Integer unitId = 0;
-	if(!S.tryGetInteger(1, unitId))
-		return S.retVoid();
-	object->stack = static_cast<uint32_t>(unitId);
+	S.tryGet(1, object->stack);
 	return S.retVoid();
 }
 
 int BattleStackMovedProxy::setDistance(lua_State * L, std::shared_ptr<BattleStackMoved> object)
 {
 	LuaStack S(L);
-	lua_Integer distance = 0;
-	if(!S.tryGetInteger(1, distance))
-		return S.retVoid();
-	object->distance = distance;
+	S.tryGet(1, object->distance);
 	return S.retVoid();
 }
 

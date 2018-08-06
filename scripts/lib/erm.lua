@@ -23,20 +23,23 @@ ERM.getY = function(key)
 	return y[key]
 end
 
-local __BU
-local __IF
+local Receivers = {}
 
-ERM.BU = function(...)
-	__BU = __BU or require("core:erm.BU")
-	__BU.ERM = ERM
-	return __BU
+local function getReceiverLoader(name)
+	local name = name
+
+	local loader = function(...)
+		Receivers[name] = Receivers[name] or require("core:erm."..name)
+
+		local receiver = Receivers[name]
+		receiver.ERM = ERM
+		return receiver
+	end
+	return loader
 end
 
-ERM.IF = function(...)
-	__IF = __IF or require("core:erm.IF")
-	__IF.ERM = ERM
-	return __IF
-end
+ERM.BU = getReceiverLoader("BU")
+ERM.IF = getReceiverLoader("IF")
 
 local triggers = {}
 

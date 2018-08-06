@@ -89,6 +89,8 @@
 		<Unit filename="api/ServerCb.h" />
 		<Unit filename="api/battle/UnitProxy.cpp" />
 		<Unit filename="api/battle/UnitProxy.h" />
+		<Unit filename="api/netpacks/BattleLogMessage.cpp" />
+		<Unit filename="api/netpacks/BattleLogMessage.h" />
 		<Unit filename="api/netpacks/BattleStackMoved.cpp" />
 		<Unit filename="api/netpacks/BattleStackMoved.h" />
 		<Unit filename="api/netpacks/InfoWindow.cpp" />

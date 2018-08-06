@@ -649,6 +649,11 @@ void BattleSetActiveStack::applyCl(CClient *cl)
 	cl->startPlayerBattleAction(playerToCall);
 }
 
+void BattleLogMessage::applyCl(CClient * cl)
+{
+	callBattleInterfaceIfPresentForBothSides(cl, &IBattleEventsReceiver::battleLogMessage, lines);
+}
+
 void BattleTriggerEffect::applyCl(CClient * cl)
 {
 	callBattleInterfaceIfPresentForBothSides(cl, &IBattleEventsReceiver::battleTriggerEffect, *this);

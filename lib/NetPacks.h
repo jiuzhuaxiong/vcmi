@@ -1404,6 +1404,22 @@ struct BattleResult : public CPackForClient
 	}
 };
 
+struct BattleLogMessage : public CPackForClient
+{
+	std::vector<MetaString> lines;
+
+	BattleLogMessage(){}
+
+	void applyCl(CClient * cl);
+	DLL_LINKAGE void applyGs(CGameState * gs);
+	DLL_LINKAGE void applyBattle(IBattleState * battleState);
+
+	template <typename Handler> void serialize(Handler & h, const int version)
+	{
+		h & lines;
+	}
+};
+
 struct BattleStackMoved : public CPackForClient
 {
 	ui32 stack;

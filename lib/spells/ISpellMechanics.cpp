@@ -160,6 +160,11 @@ void BattleStateProxy::complain(const std::string & problem) const
 		logGlobal->error(problem);
 }
 
+void BattleStateProxy::apply(BattleLogMessage * pack)
+{
+	applyAny(pack);
+}
+
 void BattleStateProxy::apply(BattleStackMoved * pack)
 {
 	applyAny(pack);

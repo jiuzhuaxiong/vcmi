@@ -27,7 +27,9 @@ public:
 
 	static const std::vector<typename Wrapper::RegType> REGISTER;
 
-	static int moveUnit(lua_State * L, ServerBattleCb * object);
+	template<typename NetPack>
+	static int apply(lua_State * L, ServerBattleCb * object);
+
 };
 
 }

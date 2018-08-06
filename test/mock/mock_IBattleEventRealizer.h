@@ -18,6 +18,7 @@ public:
 	MOCK_CONST_METHOD1(complain, void(const std::string & ));
 	MOCK_CONST_METHOD0(describeChanges, bool());
 
+	MOCK_METHOD1(apply, void(BattleLogMessage *));
 	MOCK_METHOD1(apply, void(BattleStackMoved *));
 	MOCK_METHOD1(apply, void(BattleUnitsChanged *));
 	MOCK_METHOD1(apply, void(SetStackEffect *));

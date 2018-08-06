@@ -80,6 +80,7 @@ public:
 
 	void complain(const std::string & problem) const override;
 
+	void apply(BattleLogMessage * pack)	override;
 	void apply(BattleStackMoved * pack) override;
 	void apply(BattleUnitsChanged * pack) override;
 	void apply(SetStackEffect * pack) override;

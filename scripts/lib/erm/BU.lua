@@ -1,5 +1,7 @@
 require("battle.Unit")
 
+local BattleLogMessage = require("netpacks.BattleLogMessage")
+
 local battle = BATTLE
 
 local BU = {}
@@ -100,6 +102,20 @@ BU.G = function(self, x, ...)
 
 	if argc == 1 then
 		return BU_G(x, ...)
+	end
+end
+
+local BU_M = function(x, message)
+	local pack = BattleLogMessage.new()
+	pack:addText(message)
+	BATTLESERVER:addToBattleLog(pack)
+end
+
+BU.M = function(self, x, ...)
+	local argc = select('#', ...)
+
+	if argc == 1 then
+		return BU_M(x, ...)
 	end
 end
 

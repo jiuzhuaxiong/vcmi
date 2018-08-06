@@ -15,6 +15,7 @@ set(lib_SRCS
 		api/Registry.cpp
 		api/ServerCb.cpp
 
+		api/netpacks/BattleLogMessage.cpp
 		api/netpacks/BattleStackMoved.cpp
 		api/netpacks/InfoWindow.cpp
 )

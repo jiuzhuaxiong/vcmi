@@ -16,7 +16,7 @@
 
 #include "Registry.h"
 
-#include "netpacks/BattleStackMoved.h"
+#include "../../../lib/NetPacks.h"
 
 namespace scripting
 {
@@ -26,18 +26,23 @@ namespace api
 const std::vector<BattleServerCbProxy::RegType> BattleServerCbProxy::REGISTER =
 {
 	{
+		"addToBattleLog",
+		&BattleServerCbProxy::apply<BattleLogMessage>
+	},
+	{
 		"moveUnit",
-		&BattleServerCbProxy::moveUnit
+		&BattleServerCbProxy::apply<BattleStackMoved>
 	}
 };
 
-int BattleServerCbProxy::moveUnit(lua_State * L, ServerBattleCb * object)
+template<typename NetPack>
+int BattleServerCbProxy::apply(lua_State * L, ServerBattleCb * object)
 {
 	LuaStack S(L);
 
-	std::shared_ptr<BattleStackMoved> pack;
+	std::shared_ptr<NetPack> pack;
 
-	if(!S.tryGetShared<BattleStackMoved>(1, pack))
+	if(!S.tryGet(1, pack))
 		return S.retVoid();
 
 	object->apply(pack.get());
